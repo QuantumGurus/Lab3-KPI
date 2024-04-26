@@ -1,6 +1,7 @@
 package painter
 
 import (
+	"github.com/roman-mazur/architecture-lab-3/config"
 	"image"
 	"sync"
 
@@ -25,7 +26,7 @@ type Loop struct {
 	stopReq bool
 }
 
-var size = image.Pt(400, 400)
+var size = image.Pt(config.SCREEN_SIZE, config.SCREEN_SIZE)
 
 // Start запускає цикл подій. Цей метод потрібно запустити до того, як викликати на ньому будь-які інші методи.
 func (l *Loop) Start(s screen.Screen) {

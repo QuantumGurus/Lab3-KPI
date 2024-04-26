@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/roman-mazur/architecture-lab-3/config"
 	"image"
 	"image/color"
 	"log"
@@ -31,7 +32,7 @@ type Visualizer struct {
 
 func (pw *Visualizer) Main() {
 	// Ініціалізація центру фігури.
-	pw.figurePos = image.Point{400, 400} // Початкове положення в центрі.
+	pw.figurePos = image.Point{config.SCREEN_SIZE / 2, config.SCREEN_SIZE / 2} // Початкове положення в центрі.
 	pw.tx = make(chan screen.Texture)
 	pw.done = make(chan struct{})
 	driver.Main(pw.run)
@@ -44,8 +45,8 @@ func (pw *Visualizer) Update(t screen.Texture) {
 func (pw *Visualizer) run(s screen.Screen) {
 	w, err := s.NewWindow(&screen.NewWindowOptions{
 		Title:  pw.Title,
-		Width:  800, // Ширина вікна
-		Height: 800, // Висота вікна
+		Width:  config.SCREEN_SIZE, // Ширина вікна
+		Height: config.SCREEN_SIZE, // Висота вікна
 	})
 	if err != nil {
 		log.Fatal("Failed to initialize the app window:", err)
