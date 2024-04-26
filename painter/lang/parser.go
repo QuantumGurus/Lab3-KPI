@@ -11,6 +11,8 @@ import (
 	"github.com/roman-mazur/architecture-lab-3/painter"
 )
 
+const screenSize = 800
+
 // Parser уміє прочитати дані з вхідного io.Reader та повернути список операцій представлені вхідним скриптом.
 type Parser struct {
 	uiState UiState
@@ -54,7 +56,7 @@ func (parser *Parser) parse(cmdLine string) ([]painter.Operation, error) {
 		parser.uiState.SetUpdatedOperation()
 
 	case "bgrect":
-		arguments, err := TakeArguments(cmdLineParts, 5)
+		arguments, err := TakeArguments(cmdLineParts, 5, screenSize)
 		if err != nil {
 			return nil, err
 		}
@@ -62,14 +64,14 @@ func (parser *Parser) parse(cmdLine string) ([]painter.Operation, error) {
 			image.Point{X: arguments[2], Y: arguments[3]})
 
 	case "figure":
-		arguments, err := TakeArguments(cmdLineParts, 3)
+		arguments, err := TakeArguments(cmdLineParts, 3, screenSize)
 		if err != nil {
 			return nil, err
 		}
 		parser.uiState.AddFigure(image.Point{X: arguments[0], Y: arguments[1]})
 
 	case "move":
-		arguments, err := TakeArguments(cmdLineParts, 3)
+		arguments, err := TakeArguments(cmdLineParts, 3, screenSize)
 		if err != nil {
 			return nil, err
 		}
@@ -86,33 +88,23 @@ func (parser *Parser) parse(cmdLine string) ([]painter.Operation, error) {
 	return parser.uiState.GetParsedCommands(), nil
 }
 
-func TakeArguments(arguments []string, expectedArguments int) (correctArguments []int, err error) {
+func TakeArguments(arguments []string, expectedArguments int, screenSize int) (correctArguments []int, err error) {
 	if len(arguments) != expectedArguments {
 		return nil, errors.New("wrong number of arguments")
 	}
 	var args []int
-	for _, arg := range arguments[1:] {
-		if isInt(arg) {
-			intNum, _ := strconv.Atoi(arg)
-			args = append(args, intNum)
-			continue
-		} else if isFloat(arg) {
-			floatNum, _ := strconv.ParseFloat(arg, 64)
-			intNum := int(floatNum)
-			args = append(args, intNum)
-		} else {
-			return nil, errors.New("wrong type of arguments")
-		}
-	}
+	args, err = ArgsToInt(arguments, screenSize)
 	return args, nil
 }
 
-func isInt(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
-}
-
-func isFloat(s string) bool {
-	_, err := strconv.ParseFloat(s, 64)
-	return err == nil
+func ArgsToInt(tokens []string, screenSize int) ([]int, error) {
+	args := make([]int, 0, len(tokens)-1)
+	for _, arg := range tokens[1:] {
+		val, err := strconv.ParseFloat(arg, 64)
+		if err != nil {
+			return nil, err
+		}
+		args = append(args, int(val*float64(screenSize)))
+	}
+	return args, nil
 }

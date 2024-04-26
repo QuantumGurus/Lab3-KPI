@@ -18,18 +18,18 @@ func Test_parse_struct(t *testing.T) {
 	}{
 		{
 			name:    "background rectangle",
-			command: "bgrect 0 0 50 50",
-			op:      &painter.Rectangle{LeftPoint: image.Point{X: 0, Y: 0}, RightPoint: image.Point{X: 50, Y: 50}},
+			command: "bgrect 0 0 0.25 0.25",
+			op:      &painter.Rectangle{LeftPoint: image.Point{X: 0, Y: 0}, RightPoint: image.Point{X: 200, Y: 200}},
 		},
 		{
 			name:    "figure",
-			command: "figure 220 220",
-			op:      &painter.Figure{FigureCentralPos: image.Point{X: 220, Y: 220}, Color: color.RGBA{R: 255, G: 255, B: 255, A: 255}},
+			command: "figure 0.2 0.2",
+			op:      &painter.Figure{FigureCentralPos: image.Point{X: 160, Y: 160}, Color: color.RGBA{R: 255, G: 255, B: 255, A: 255}},
 		},
 		{
 			name:    "move",
-			command: "move 100 100",
-			op:      &painter.Move{NewPointCenter: image.Point{X: 100, Y: 100}},
+			command: "move 0.1 0.1",
+			op:      &painter.Move{NewPointCenter: image.Point{X: 80, Y: 80}},
 		},
 		{
 			name:    "update",
