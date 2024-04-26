@@ -37,12 +37,10 @@ func (uiState *UiState) AddFigure(centralPoint image.Point) {
 }
 
 func (uiState *UiState) Reset() {
-	uiState.BackgroundColor = painter.OperationFunc(painter.BlackFill)
+	uiState.BackgroundColor = nil
 	uiState.Figures = nil
 	uiState.UpdateOperation = nil
-	uiState.BackgroundRectangle = &painter.Rectangle{
-		LeftPoint:  image.Point{},
-		RightPoint: image.Point{}}
+	uiState.BackgroundRectangle = nil
 }
 
 func (uiState *UiState) SetUpdatedOperation() {
@@ -75,4 +73,18 @@ func (uiState *UiState) GetParsedCommands() []painter.Operation {
 		res = append(res, uiState.UpdateOperation)
 	}
 	return res
+}
+
+func (uiState *UiState) ResetOperations() {
+	if uiState.BackgroundColor == nil {
+		uiState.BackgroundColor = painter.OperationFunc(painter.Reset)
+	}
+	if uiState.UpdateOperation != nil {
+		uiState.UpdateOperation = nil
+	}
+}
+
+func (uiState *UiState) ResetStateAndBackground() {
+	uiState.Reset()
+	uiState.BackgroundColor = painter.OperationFunc(painter.Reset)
 }
