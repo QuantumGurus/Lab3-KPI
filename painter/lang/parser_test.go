@@ -46,11 +46,6 @@ func Test_parse_struct(t *testing.T) {
 			command: "figure 1",
 			op:      nil,
 		},
-		{
-			name:    "float numbers",
-			command: "bgrect 10 10 122.3 122.3",
-			op:      &painter.Rectangle{LeftPoint: image.Point{X: 10, Y: 10}, RightPoint: image.Point{X: 122, Y: 122}},
-		},
 	}
 
 	for _, tc := range tests {

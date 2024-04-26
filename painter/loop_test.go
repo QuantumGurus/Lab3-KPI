@@ -81,7 +81,7 @@ func TestLoopPostFailure(t *testing.T) {
 	receiverMock := new(MockReceiver)
 	screenMock := new(MockScreen)
 
-	texture := image.Pt(400, 400)
+	texture := image.Pt(800, 800)
 	screenMock.On("NewTexture", texture).Return(textureMock, nil)
 	receiverMock.On("Update", textureMock).Return()
 	loop := Loop{
@@ -101,7 +101,7 @@ func TestLoopPostFailure(t *testing.T) {
 
 	operationOne.AssertCalled(t, "Do", textureMock)
 	receiverMock.AssertNotCalled(t, "Update", textureMock)
-	screenMock.AssertCalled(t, "NewTexture", image.Pt(400, 400))
+	screenMock.AssertCalled(t, "NewTexture", image.Pt(800, 800))
 }
 
 func TestLoopPostSuccess(t *testing.T) {
@@ -109,7 +109,7 @@ func TestLoopPostSuccess(t *testing.T) {
 	receiverMock := new(MockReceiver)
 	screenMock := new(MockScreen)
 
-	texture := image.Pt(400, 400)
+	texture := image.Pt(800, 800)
 	screenMock.On("NewTexture", texture).Return(textureMock, nil)
 	receiverMock.On("Update", textureMock).Return()
 	loop := Loop{
@@ -129,7 +129,7 @@ func TestLoopPostSuccess(t *testing.T) {
 
 	operationOne.AssertCalled(t, "Do", textureMock)
 	receiverMock.AssertCalled(t, "Update", textureMock)
-	screenMock.AssertCalled(t, "NewTexture", image.Pt(400, 400))
+	screenMock.AssertCalled(t, "NewTexture", image.Pt(800, 800))
 }
 
 func TestLoopPostMultipleSuccess(t *testing.T) {
@@ -137,7 +137,7 @@ func TestLoopPostMultipleSuccess(t *testing.T) {
 	receiverMock := new(MockReceiver)
 	screenMock := new(MockScreen)
 
-	texture := image.Pt(400, 400)
+	texture := image.Pt(800, 800)
 	screenMock.On("NewTexture", texture).Return(textureMock, nil)
 	receiverMock.On("Update", textureMock).Return()
 	loop := Loop{
@@ -161,5 +161,5 @@ func TestLoopPostMultipleSuccess(t *testing.T) {
 	operationOne.AssertCalled(t, "Do", textureMock)
 	operationTwo.AssertCalled(t, "Do", textureMock)
 	receiverMock.AssertCalled(t, "Update", textureMock)
-	screenMock.AssertCalled(t, "NewTexture", image.Pt(400, 400))
+	screenMock.AssertCalled(t, "NewTexture", image.Pt(800, 800))
 }
