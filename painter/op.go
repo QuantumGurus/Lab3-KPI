@@ -2,9 +2,9 @@ package painter
 
 import (
 	"golang.org/x/exp/shiny/screen"
-	"golang.org/x/image/draw"
 	"image"
 	"image/color"
+	"image/draw"
 )
 
 // Operation змінює вхідну текстуру.
@@ -48,10 +48,6 @@ func GreenFill(t screen.Texture) {
 	t.Fill(t.Bounds(), color.RGBA{G: 0xff, A: 0xff}, screen.Src)
 }
 
-func BlackFill(t screen.Texture) {
-	t.Fill(t.Bounds(), color.Black, screen.Src)
-}
-
 type Rectangle struct {
 	LeftPoint  image.Point
 	RightPoint image.Point
@@ -87,4 +83,8 @@ func (op *Move) Do(t screen.Texture) bool {
 		op.Figures[i].FigureCentralPos.Y += op.NewPointCenter.Y
 	}
 	return false
+}
+
+func Reset(t screen.Texture) {
+	t.Fill(t.Bounds(), color.Black, screen.Src)
 }
