@@ -3,15 +3,13 @@ package lang
 import (
 	"bufio"
 	"errors"
+	"github.com/roman-mazur/architecture-lab-3/config"
+	"github.com/roman-mazur/architecture-lab-3/painter"
 	"image"
 	"io"
 	"strconv"
 	"strings"
-
-	"github.com/roman-mazur/architecture-lab-3/painter"
 )
-
-const screenSize = 800
 
 // Parser уміє прочитати дані з вхідного io.Reader та повернути список операцій представлені вхідним скриптом.
 type Parser struct {
@@ -56,7 +54,7 @@ func (parser *Parser) parse(cmdLine string) ([]painter.Operation, error) {
 		parser.uiState.SetUpdatedOperation()
 
 	case "bgrect":
-		arguments, err := TakeArguments(cmdLineParts, 5, screenSize)
+		arguments, err := TakeArguments(cmdLineParts, 5, config.SCREEN_SIZE)
 		if err != nil {
 			return nil, err
 		}
@@ -64,14 +62,14 @@ func (parser *Parser) parse(cmdLine string) ([]painter.Operation, error) {
 			image.Point{X: arguments[2], Y: arguments[3]})
 
 	case "figure":
-		arguments, err := TakeArguments(cmdLineParts, 3, screenSize)
+		arguments, err := TakeArguments(cmdLineParts, 3, config.SCREEN_SIZE)
 		if err != nil {
 			return nil, err
 		}
 		parser.uiState.AddFigure(image.Point{X: arguments[0], Y: arguments[1]})
 
 	case "move":
-		arguments, err := TakeArguments(cmdLineParts, 3, screenSize)
+		arguments, err := TakeArguments(cmdLineParts, 3, config.SCREEN_SIZE)
 		if err != nil {
 			return nil, err
 		}
