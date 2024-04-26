@@ -17,8 +17,10 @@ type Parser struct {
 }
 
 func (parser *Parser) Parse(in io.Reader) ([]painter.Operation, error) {
+	parser.uiState.ResetOperations()
 	scanner := bufio.NewScanner(in)
 	scanner.Split(bufio.ScanLines)
+
 	var res []painter.Operation
 	for scanner.Scan() {
 		commandLine := scanner.Text()
@@ -28,7 +30,6 @@ func (parser *Parser) Parse(in io.Reader) ([]painter.Operation, error) {
 		}
 		res = append(res, op...)
 	}
-
 	return res, nil
 }
 
@@ -37,43 +38,81 @@ func (parser *Parser) parse(cmdLine string) ([]painter.Operation, error) {
 	instruction := cmdLineParts[0]
 	switch instruction {
 	case "white":
+		if len(cmdLineParts) != 1 {
+			return nil, errors.New("wrong number of arguments")
+		}
 		parser.uiState.SetWhiteBackground()
 	case "green":
+		if len(cmdLineParts) != 1 {
+			return nil, errors.New("wrong number of arguments")
+		}
 		parser.uiState.SetGreenBackground()
 	case "update":
+		if len(cmdLineParts) != 1 {
+			return nil, errors.New("wrong number of arguments")
+		}
 		parser.uiState.SetUpdatedOperation()
+
 	case "bgrect":
-		arguments := cmdLineParts[1:5]
-		num, err := strconv.Atoi(arguments[0])
-		num2, err := strconv.Atoi(arguments[0])
-		num3, err := strconv.Atoi(arguments[0])
-		num4, err := strconv.Atoi(arguments[0])
-		if err == nil {
-			return nil, errors.New("s")
+		arguments, err := TakeArguments(cmdLineParts, 5)
+		if err != nil {
+			return nil, err
 		}
-		parser.uiState.SetBackgroundRectangle(image.Point{X: num, Y: num2}, image.Point{X: num3, Y: num4})
+		parser.uiState.SetBackgroundRectangle(image.Point{X: arguments[0], Y: arguments[1]},
+			image.Point{X: arguments[2], Y: arguments[3]})
+
 	case "figure":
-		arguments := cmdLineParts[1:3]
-		num, err := strconv.Atoi(arguments[0])
-		num2, err := strconv.Atoi(arguments[0])
-		if err == nil {
-			return nil, errors.New("s")
+		arguments, err := TakeArguments(cmdLineParts, 3)
+		if err != nil {
+			return nil, err
 		}
-		parser.uiState.AddFigure(image.Point{X: num, Y: num2})
+		parser.uiState.AddFigure(image.Point{X: arguments[0], Y: arguments[1]})
 
 	case "move":
-		arguments := cmdLineParts[1:3]
-		num, err := strconv.Atoi(arguments[0])
-		num2, err := strconv.Atoi(arguments[0])
-		if err == nil {
-			return nil, errors.New("s")
+		arguments, err := TakeArguments(cmdLineParts, 3)
+		if err != nil {
+			return nil, err
 		}
-		parser.uiState.MoveFigures(image.Point{X: num, Y: num2})
-	case "reset":
-		parser.uiState.Reset()
-	default:
-		return nil, errors.New("s")
-	}
+		parser.uiState.MoveFigures(image.Point{X: arguments[0], Y: arguments[1]})
 
+	case "reset":
+		if len(cmdLineParts) != 1 {
+			return nil, errors.New("wrong number of arguments")
+		}
+		parser.uiState.ResetStateAndBackground()
+	default:
+		return nil, errors.New("some error")
+	}
 	return parser.uiState.GetParsedCommands(), nil
+}
+
+func TakeArguments(arguments []string, expectedArguments int) (correctArguments []int, err error) {
+	if len(arguments) != expectedArguments {
+		return nil, errors.New("wrong number of arguments")
+	}
+	var args []int
+	for _, arg := range arguments[1:] {
+		if isInt(arg) {
+			intNum, _ := strconv.Atoi(arg)
+			args = append(args, intNum)
+			continue
+		} else if isFloat(arg) {
+			floatNum, _ := strconv.ParseFloat(arg, 64)
+			intNum := int(floatNum)
+			args = append(args, intNum)
+		} else {
+			return nil, errors.New("wrong type of arguments")
+		}
+	}
+	return args, nil
+}
+
+func isInt(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
+}
+
+func isFloat(s string) bool {
+	_, err := strconv.ParseFloat(s, 64)
+	return err == nil
 }
