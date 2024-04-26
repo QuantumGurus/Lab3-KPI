@@ -1,0 +1,24 @@
+name: MakeFile
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go 1.22
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.22
+
+      - name: Build project
+        run: go build -v ./...
+
+      - name: Test project
+        run: go test -v ./...
